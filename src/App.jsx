@@ -6,10 +6,12 @@ function App() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
+  const [form, setForm] = useState({ weight: null });
+
   useEffect(() => {
     liff
       .init({
-        liffId: import.meta.env.VITE_LIFF_ID
+        liffId: import.meta.env.VITE_LIFF_ID,
       })
       .then(() => {
         setMessage("LIFF init succeeded.");
@@ -20,22 +22,27 @@ function App() {
       });
   });
 
+  const handleChange = (input) => (e) => {
+    setForm({ ...form, [input]: e.target.value });
+  };
+
+  const handleSubmit = () => {
+    alert(form.weight);
+  };
+
   return (
     <div className="App">
-      <h1>create-liff-app</h1>
-      {message && <p>{message}</p>}
-      {error && (
-        <p>
-          <code>{error}</code>
-        </p>
-      )}
-      <a
-        href="https://developers.line.biz/ja/docs/liff/"
-        target="_blank"
-        rel="noreferrer"
-      >
-        LIFF Documentation
-      </a>
+      <form onSubmit={handleSubmit}>
+        <label>
+          今日の体重:
+          <input
+            type="number"
+            name="weight"
+            onChange={handleChange("weight")}
+          />
+        </label>
+        <input type="submit" value="送信する" />
+      </form>
     </div>
   );
 }
